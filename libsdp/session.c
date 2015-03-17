@@ -34,13 +34,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <stdio.h> 
 #include <sdp-int.h>
 #include <sdp.h>
 
 void *
 sdp_open(bdaddr_t const *l, bdaddr_t const *r)
 {
+	printf("sdp_open\n");
 	sdp_session_p		ss = NULL;
 	struct sockaddr_l2cap	sa;
 	socklen_t		size;
@@ -104,6 +105,8 @@ fail:
 void *
 sdp_open_local(char const *control)
 {
+	printf("sdp_open_local\n");
+	
 	sdp_session_p		ss = NULL;
 	struct sockaddr_un	sa;
 
@@ -144,6 +147,7 @@ sdp_open_local(char const *control)
 	ss->rsp_e = ss->rsp + ss->imtu;
 	ss->error = 0;
 fail:
+	printf("sdp_open_local fail\n");
 	return ((void *) ss);
 }
 
@@ -172,6 +176,7 @@ int32_t
 sdp_error(void *xss)
 {
 	sdp_session_p	ss = (sdp_session_p) xss;
-
+	printf("sdp_error\n");
+	
 	return ((ss != NULL)? ss->error : EINVAL);
 }
