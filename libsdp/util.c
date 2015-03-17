@@ -33,6 +33,7 @@
 #include <bluetooth.h>
 #include <stdio.h>
 #include <sdp.h>
+#include <syslog.h>
 
 /*
  * SDP attribute description
@@ -280,7 +281,7 @@ sdp_uuid2desc(uint16_t uuid)
 void
 sdp_print(uint32_t level, uint8_t const *start, uint8_t const *end)
 {
-      printf("sdp_print\n");
+      syslog(LOG_ERR,"sdp_print");
       
 	union {
 		int8_t		int8;

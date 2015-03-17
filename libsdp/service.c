@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 
 #include <sdp-int.h>
 #include <sdp.h>
@@ -201,6 +202,8 @@ sdp_change_service(void *xss, uint32_t handle,
 static int32_t
 sdp_receive_error_pdu(sdp_session_p ss)
 {
+	syslog(LOG_ERR,"sdp_receive_error_pdu");
+	
 	sdp_pdu_p	pdu;
 	int32_t		len;
 	uint16_t	error;

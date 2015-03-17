@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 #include "sdpcontrol.h"
 
 /* Prototypes */
@@ -52,6 +53,8 @@ static void                 usage		(void);
 int
 main(int argc, char *argv[])
 {
+	syslog(LOG_ERR,"main");
+	
 	char const	*control = SDP_LOCAL_PATH;
 	int		 n, local;
 	bdaddr_t	 bdaddr;
@@ -107,6 +110,8 @@ do_sdp_command(bdaddr_p bdaddr, char const *control, int local,
 	void			*xs = NULL;
 	int			 e, help;
 
+	syslog(LOG_ERR,"%s do_sdp_command",cmd);
+	
 	help = 0;
 	if (strcasecmp(cmd, "help") == 0) {
 		argc --;
@@ -126,6 +131,7 @@ do_sdp_command(bdaddr_p bdaddr, char const *control, int local,
 	}
 
 	c = find_sdp_command(cmd, sdp_commands);
+	
 	if (c == NULL) {
 		fprintf(stdout, "Unknown command: \"%s\"\n", cmd);
 		return (ERROR);
@@ -137,13 +143,19 @@ do_sdp_command(bdaddr_p bdaddr, char const *control, int local,
 				usage();
 
 			xs = sdp_open(NG_HCI_BDADDR_ANY, bdaddr);
+			
 		} else
+			syslog(LOG_ERR,"sdp_open_local");
 			xs = sdp_open_local(control);
 
 		if (xs == NULL)
 			errx(1, "Could not create SDP session object");
 		if (sdp_error(xs) == 0)
+		{
 			e = (c->handler)(xs, -- argc, ++ argv);
+			
+			syslog(LOG_ERR,"noerr");
+		}
 		else
 			e = ERROR;
 	} else
@@ -175,14 +187,15 @@ do_sdp_command(bdaddr_p bdaddr, char const *control, int local,
 static struct sdp_command *
 find_sdp_command(char const *command, struct sdp_command *category)   
 {
+	
 	struct sdp_command	*c = NULL;
 
 	for (c = category; c->command != NULL; c++) {
 		char	*c_end = strchr(c->command, ' ');
-
+		syslog(LOG_ERR,"%s c_end",c_end);
 		if (c_end != NULL) {
 			int	len = c_end - c->command;
-
+			
 			if (strncasecmp(command, c->command, len) == 0)
 				return (c);
 		} else if (strcasecmp(command, c->command) == 0)

@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 
 #include <sdp-int.h>
 #include <sdp.h>
@@ -48,6 +49,8 @@ sdp_search(void *xss,
 		uint32_t alen, uint32_t const *ap,
 		uint32_t vlen, sdp_attr_t *vp)
 {
+	syslog(LOG_ERR,"sdp_search");
+	
 	struct sdp_xpdu {
 		sdp_pdu_t		 pdu;
 		uint16_t		 len;

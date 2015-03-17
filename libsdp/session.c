@@ -37,11 +37,12 @@
 #include <stdio.h> 
 #include <sdp-int.h>
 #include <sdp.h>
+#include <syslog.h>
 
 void *
 sdp_open(bdaddr_t const *l, bdaddr_t const *r)
 {
-	printf("sdp_open\n");
+	syslog(LOG_ERR,"sdp_open");
 	sdp_session_p		ss = NULL;
 	struct sockaddr_l2cap	sa;
 	socklen_t		size;
@@ -105,7 +106,7 @@ fail:
 void *
 sdp_open_local(char const *control)
 {
-	printf("sdp_open_local\n");
+	syslog(LOG_ERR,"sdp_open_local");
 	
 	sdp_session_p		ss = NULL;
 	struct sockaddr_un	sa;
@@ -154,6 +155,7 @@ fail:
 int32_t
 sdp_close(void *xss)
 {
+	syslog(LOG_ERR,"sdp_close");
 	sdp_session_p	ss = (sdp_session_p) xss;
 
 	if (ss != NULL) {
@@ -176,7 +178,7 @@ int32_t
 sdp_error(void *xss)
 {
 	sdp_session_p	ss = (sdp_session_p) xss;
-	printf("sdp_error\n");
+	syslog(LOG_ERR,"sdp_error");
 	
 	return ((ss != NULL)? ss->error : EINVAL);
 }
